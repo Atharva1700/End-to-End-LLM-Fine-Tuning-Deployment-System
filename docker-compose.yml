@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  llm-api:
+    build: .
+    container_name: llm-inference
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./models:/models:ro
+      - ./data:/data:ro
+    environment:
+      - MODEL_PATH=/models/lora_output
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    restart: unless-stopped
